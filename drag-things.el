@@ -136,6 +136,9 @@ mark is active, it will be left active."
 
         ((region-active-p)
          (let (deactivate-mark)
+           (when (and (bolp) ; don't move line if point is at its start
+                      (> (point) (mark)))
+             (backward-char))
            (drag-region-lines (region-beginning) (region-end) arg)
 
            (when drag-line-reindents
