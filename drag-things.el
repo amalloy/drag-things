@@ -93,7 +93,7 @@ displaced by moving REGION by ARG lines."
              (save-excursion
                (goto-char (point-min)) ;; hack
                (set-mark (point-min))  ;; hack
-               (redisplay)))	       ;; hack
+               (redisplay)))           ;; hack
            (goto-char ref)
            (set-marker ref nil)))))
 
@@ -126,16 +126,18 @@ drag all lines in the region.
 Point is left in it's place relative to the moved lines. If the
 mark is active, it will be left active."
   (interactive "*P")
-  (cond ((or (consp arg) (if arg (zerop arg)))
+  (cond ((or (consp arg)
+             (and arg (zerop arg)))
          (let ((col (current-column)))
            (transpose-lines 0)
            (when drag-line-reindents
              (funcall indent-line-function))
            (move-to-column col)))
-        
+
         ((region-active-p)
          (let (deactivate-mark)
            (drag-region-lines (region-beginning) (region-end) arg)
+
            (when drag-line-reindents
              (let ((lines (region-lines (region-beginning) (region-end))))
                (indent-region (car lines) (cdr lines)))))
